@@ -1,0 +1,104 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "33e11414-c9dd-aa06-4cbc-fbb2a141c8a0",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "start_date": {
+              "value": {
+                "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "end_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          },
+          "sessionTag": "earthquake_ingest_silver_prod"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Bronze Notebook",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "9b2d2280-2b6e-90f9-4ed4-c45db6823b76",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "start_date": {
+              "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+              "type": "string"
+            }
+          },
+          "sessionTag": "earthquake_ingest_silver_prod"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Silver Notebook",
+        "dependsOn": [
+          {
+            "activity": "Bronze Notebook",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "876b28d1-18c1-806e-4e3c-c96debe84a4a",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "start_date": {
+              "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+              "type": "string"
+            }
+          },
+          "sessionTag": "earthquake_ingest_silver_prod"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Gold Notebook",
+        "dependsOn": [
+          {
+            "activity": "Silver Notebook",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "v1": {
+        "type": "String"
+      }
+    }
+  }
+}
