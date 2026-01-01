@@ -16,16 +16,20 @@
 # META           "id": "8871bb89-78f7-468a-ba37-05ee576b8bdb"
 # META         }
 # META       ]
+# META     },
+# META     "environment": {
+# META       "environmentId": "6d63afe7-5c7e-a4c0-4cba-f813e70ce7e1",
+# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
 # META     }
 # META   }
 # META }
 
-# CELL ********************
+# PARAMETERS CELL ********************
 
-# from datetime import date, timedelta
+from datetime import date, timedelta
 
-# start_date = date.today() - timedelta(7)
-# end_date = date.today() - timedelta(1)
+start_date = date.today() - timedelta(7)
+end_date = date.today() - timedelta(1)
 
 
 # METADATA ********************
@@ -50,7 +54,7 @@ if (response.status_code == 200):
    file_path = f"/lakehouse/default/Files/{start_date}_earthquake_date.json"
 
    with open(file_path, 'w') as file: 
-    json.dump(data, file, indent=4)
+        json.dump(data, file, indent=4)
 else: 
     print(f"Failed to load data from API: {response.status_code}")
 

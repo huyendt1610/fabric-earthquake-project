@@ -16,8 +16,23 @@
 # META           "id": "8871bb89-78f7-468a-ba37-05ee576b8bdb"
 # META         }
 # META       ]
+# META     },
+# META     "environment": {
+# META       "environmentId": "6d63afe7-5c7e-a4c0-4cba-f813e70ce7e1",
+# META       "workspaceId": "00000000-0000-0000-0000-000000000000"
 # META     }
 # META   }
+# META }
+
+# PARAMETERS CELL ********************
+
+start_date = '2025-12-25'
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
 # META }
 
 # CELL ********************
@@ -42,9 +57,40 @@ df_selected = df.select(
             )
 df_selected = df_selected.withColumn("time", (col('time')/1000).cast(TimestampType()))\
                         .withColumn("updated", (col('updated')/1000).cast(TimestampType()))
-                        
-df_selected.write.mode("append").saveAsTable("earthquake_events_silver")
+
 #display(df_selected)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+from delta.tables import * 
+
+deltaTable = DeltaTable.forName(spark,"earthquake_events_silver")
+dfUpdated = df_selected
+
+deltaTable.alias('silver')\
+.merge(
+    dfUpdated.alias('updates'),
+    'silver.id == updates.id'
+).whenNotMatchedInsertAll().whenMatchedUpdateAll().execute()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+#df_selected.write.mode("append").saveAsTable("earthquake_events_silver")
+
 
 # METADATA ********************
 

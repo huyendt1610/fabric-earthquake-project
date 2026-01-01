@@ -4,8 +4,8 @@
       {
         "type": "TridentNotebook",
         "typeProperties": {
-          "notebookId": "33e11414-c9dd-aa06-4cbc-fbb2a141c8a0",
-          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "notebookId": "a141c8a0-fbb2-4cbc-aa06-c9dd33e11414",
+          "workspaceId": "7a34bd9a-aea5-469d-8449-99e0cc9e83ab",
           "parameters": {
             "start_date": {
               "value": {
@@ -32,16 +32,21 @@
           "secureOutput": false
         },
         "name": "Bronze Notebook",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
         "dependsOn": []
       },
       {
         "type": "TridentNotebook",
         "typeProperties": {
-          "notebookId": "9b2d2280-2b6e-90f9-4ed4-c45db6823b76",
-          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "notebookId": "b6823b76-c45d-4ed4-90f9-2b6e9b2d2280",
+          "workspaceId": "7a34bd9a-aea5-469d-8449-99e0cc9e83ab",
           "parameters": {
             "start_date": {
-              "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+              "value": {
+                "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
               "type": "string"
             }
           },
@@ -55,6 +60,8 @@
           "secureOutput": false
         },
         "name": "Silver Notebook",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Bronze Notebook",
@@ -71,7 +78,10 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "start_date": {
-              "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+              "value": {
+                "value": "@formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
               "type": "string"
             }
           },

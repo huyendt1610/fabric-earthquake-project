@@ -24,6 +24,17 @@
 # META   }
 # META }
 
+# PARAMETERS CELL ********************
+
+start_date = '2025-12-25'
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 from pyspark.sql.functions import col, when, udf
@@ -71,7 +82,38 @@ df_selected = df.withColumn("country_code", get_country_code_udf(col("latitude")
                                         .when((col("sig") >= 100) & (col("sig") < 500), "Moderate").\
                                         otherwise("High"))
                                         
-df_selected.write.mode("append").saveAsTable("earthquake_events_gold")
+
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+from delta.tables import * 
+
+deltaTable = DeltaTable.forName(spark, "earthquake_events_gold")
+dfupdates = df_selected
+
+deltaTable.alias('gold')\
+.merge(
+    dfupdates.alias('updates'),
+    "gold.id == updates.id"
+).whenNotMatchedInsertAll().whenMatchedUpdateAll().execute()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+#df_selected.write.mode("append").saveAsTable("earthquake_events_gold")
 
 # METADATA ********************
 
