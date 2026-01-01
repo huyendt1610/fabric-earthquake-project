@@ -30,7 +30,7 @@ from pyspark.sql.functions import col, when, udf
 from pyspark.sql.types import StringType
 import reverse_geocoder as rg
 
-df = spark.read.table("earthquake_event_silver").filter(col("time") > start_date)
+df = spark.read.table("earthquake_events_silver").filter(col("time") > start_date)
 #display(df)
 
 # METADATA ********************
